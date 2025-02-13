@@ -76,7 +76,7 @@ class QNA(Star):
         url = self.api_url
 
         payload = {
-            "model": self.model_name,
+            "model": "deepseek-ai/DeepSeek-R1",
             "messages": [
                 {
                     "role": "user",
