@@ -84,7 +84,8 @@ class QNA(Star):
             ],
             stream=True
         )
-        async for chunk in response:
+        
+        for chunk in response:
             yield event.plain_result(chunk.choices[0].delta.content, end='')
 
 
