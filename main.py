@@ -20,7 +20,9 @@ class QNA(Star):
         self.config = config
         self.bot_wake_prefix = tuple(p for p in astrbot_config['wake_prefix'] if p)
         self.LLM_wake_prefix = astrbot_config['provider_settings']['wake_prefix']
-
+        self.api_url = config.get('url', '')  # 提取 API URL
+        self.api_key = config.get('apikey', '')  # 提取 API Key
+        self.model_name = config.get('modelname', '')  # 提取 MODEL NAME
         # 读取关键词列表
         question_keyword_list = self.config.get("question_keyword_list", "").split(";")
         self.question_pattern = None  # 默认值
@@ -71,10 +73,10 @@ class QNA(Star):
         )
 
 
-        url = "https://api.siliconflow.cn/v1/chat/completions"
+        url = self.api_url
 
         payload = {
-            "model": "deepseek-ai/DeepSeek-V2.5",
+            "model": self.model_name,
             "messages": [
                 {
                     "role": "user",
@@ -86,7 +88,7 @@ class QNA(Star):
             "n": 1,
         }
         headers = {
-            "Authorization": "Bearer sk-wfazwakmpvtljidmfzenvqwukfstrbkosuevecgyscufkpwh",
+            "Authorization": "Bearer "+self.api_key,
             "Content-Type": "application/json"
         }
 
