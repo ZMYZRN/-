@@ -96,7 +96,7 @@ class QNA(Star):
         data = json.loads(response.text)
         content = data["choices"][0]["message"]["content"]
 
-        yield event.plain_result(content)
+        yield event.plain_result(response.text)
 
 
 
