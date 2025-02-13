@@ -73,46 +73,22 @@ class QNA(Star):
         conversation_id = await self.context.conversation_manager.get_curr_conversation_id(event.unified_msg_origin)
         conversation = await self.context.conversation_manager.get_conversation(event.unified_msg_origin, conversation_id)
 
-        url = "https://api.siliconflow.cn/v1/chat/completions"
+        client = OpenAI(api_key=sk-wfazwakmpvtljidmfzenvqwukfstrbkosuevecgyscufkpwh, base_url="https://api.siliconflow.cn/v1")
 
-        payload = {
-            "model": "deepseek-ai/DeepSeek-V3",
-            "messages": [
-                {
-                    "role": "user",
-                    "content": message
-                }
+        response = client.chat.completions.create(
+            model='deepseek-ai/DeepSeek-V2.5',
+            messages=[
+                {'role': 'user',
+                 'content': message,
+                 "max_tokens": 512,
+                 "frequency_penalty": 0.5,
+                 "n": 1,
+                 }
             ],
-            "stream": False,
-            "max_tokens": 512,
-            "stop": ["null"],
-            "temperature": 0.7,
-            "top_p": 0.7,
-            "top_k": 50,
-            "frequency_penalty": 0.5,
-            "n": 1,
-            "response_format": {"type": "text"},
-            "tools": [
-                {
-                    "type": "function",
-                    "function": {
-                        "description": "<string>",
-                        "name": "<string>",
-                        "parameters": {},
-                        "strict": False
-                    }
-                }
-            ]
-        }
-        headers = {
-            "Authorization": "Bearer sk-qeqttbvwvfbeqeyizkdlnwqxvhlnnmwnfehrcyxtwkjijkbk",
-            "Content-Type": "application/json"
-        }
+            stream=True
+        )
 
-        response = requests.request("POST", url, json=payload, headers=headers)
-
-
-        yield event.plain_result(response[0].choices[0].message.content)
+        yield event.plain_result(response.choices[0].delta.content)
 
 
 
