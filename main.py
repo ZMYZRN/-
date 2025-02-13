@@ -94,7 +94,7 @@ class QNA(Star):
 
         response = requests.request("POST", url, json=payload, headers=headers)
         data = json.loads(response.text)
-        content = data["choices"][0]["message"]["content"]
+        content = data['choices'][0]['message']['content']
 
         yield event.plain_result(content)
 
