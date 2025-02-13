@@ -80,7 +80,7 @@ class QNA(Star):
             model='deepseek-ai/DeepSeek-V2.5',
             messages=[
                 {'role': 'user',
-                 'content': json.loads(conversation.history)}
+                 'content': message}
             ],
             stream=True
         )
