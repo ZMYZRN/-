@@ -70,8 +70,6 @@ class QNA(Star):
             f"内容:{message}"
         )
 
-        conversation_id = await self.context.conversation_manager.get_curr_conversation_id(event.unified_msg_origin)
-        conversation = await self.context.conversation_manager.get_conversation(event.unified_msg_origin, conversation_id)
 
         url = "https://api.siliconflow.cn/v1/chat/completions"
 
