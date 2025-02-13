@@ -22,5 +22,24 @@
         "description": "调用LLM回答的概率",
         "default": 1,
         "hint": "根据设置的概率回答问题，0代表完全不回答，1代表必然使用LLM回答"
+    },
+    "url": {
+        "type": "string",
+        "description": "你想使用的api链接",
+        "default": "https://api.siliconflow.cn/v1/chat/completions",
+        "hint": "不填的话默认用硅基流动模型"
+    },
+    "modelname": {
+        "type": "string",
+        "description": "你想使用的模型版本",
+        "default": "deepseek-ai/DeepSeek-V2.5",
+        "hint": "不填的话默认用dsv2.5"
+    }
+    ,
+    "apikey": {
+        "type": "string",
+        "description": "你想使用的api Key",
+        "default": "",
+        "hint": "没有默认值，不能不填"
     }
 }
