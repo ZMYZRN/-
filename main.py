@@ -93,10 +93,18 @@ class QNA(Star):
         }
 
         response = requests.request("POST", url, json=payload, headers=headers)
+
+        # 解析JSON数据
         data = json.loads(response.text)
 
+        # 提取content内容
+        content = data['choices'][0]['message']['content']
 
-        yield event.plain_result(response.text)
+        # 处理转义字符（如将\n转换为换行）
+        processed_content = bytes(content, 'utf-8').decode('unicode_escape')
+
+        # 输出结果
+        print(processed_content)
 
 
 
