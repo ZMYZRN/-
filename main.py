@@ -84,7 +84,7 @@ class QNA(Star):
             ],
             stream=True
         )
-        yield event.plain_result(response)
+        yield event.plain_result(response.text)
 
 
 
