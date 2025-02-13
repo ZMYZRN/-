@@ -86,7 +86,7 @@ class QNA(Star):
         )
         
         for chunk in response:
-            yield event.plain_result(chunk.choices[0].delta.content, end='')
+            yield event.plain_result(chunk.choices[0].delta.content)
 
 
     @event_message_type(EventMessageType.GROUP_MESSAGE)
