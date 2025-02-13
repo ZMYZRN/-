@@ -12,7 +12,7 @@ from astrbot.api.star import Context, Star, register
 logger = logging.getLogger("astrbot")
 
 
-@register("nian", "阿雪", "一个用于自动回答群聊问题的插件", "1.1.1", "https://github.com/zouyonghe/astrbot_plugin_qna")
+@register("nian", "阿雪", "一个用于自动回答群聊问题的插件", "1.1.1", "https://github.com/ZMYZRN/-")
 class QNA(Star):
     def __init__(self, context: Context, config: dict):
         super().__init__(context)
