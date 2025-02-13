@@ -86,35 +86,21 @@ class QNA(Star):
     @event_message_type(EventMessageType.GROUP_MESSAGE)
     async def auto_answer(self, event: AstrMessageEvent):
         """自动回答群消息中的问题"""
-        # 判定是否启用自动回复
-        if not self.config.get("enable_qna", False):
-            return
 
-        # 判断模型是否支持函数调用
-        #if not self._model_support_function():
-        #    return
-
-        # 如果没有配置关键词或启用群组列表，直接返回
-        if not self._in_qna_group_list(event.get_group_id()) or not self.question_pattern:
-            return
-
-        # 检测到两类唤醒词均交给原始流程处理
-        if self.bot_wake_prefix and event.message_str.startswith(self.bot_wake_prefix):
-            return
-
-        if self.LLM_wake_prefix and event.message_str.startswith(self.LLM_wake_prefix):
-            return
-
-        # 匹配提问关键词
-        if not re.search(self.question_pattern, event.message_str):
-            return
-
-        # 检测字数、LLM概率调用
-        if len(event.message_str) > 50 or random.random() > float(self.config.get("llm_answer_probability", 0.1)):
-            return
-
-        async for resp in self._llm_check_and_answer(event, event.message_str):
-            yield resp
+        client = OpenAI(
+            api_key="sk-qeqttbvwvfbeqeyizkdlnwqxvhlnnmwnfehrcyxtwkjijkbk",
+            base_url="https://api.siliconflow.cn/v1"
+        )
+        response = client.chat.completions.create(
+            model='deepseek-ai/DeepSeek-V2.5',
+            messages=[
+                {'role': 'assistant',
+                 'content': event.message_str}
+            ],
+            stream=True
+        )
+        async for chunk in response:
+            yield event.plain_result(chunk.choices[0].delta.content, end='')
 
 
     @command_group("qna")
@@ -207,14 +193,4 @@ class QNA(Star):
             logger.error(f"❌ 移除群组 {group_id} 时发生错误：{e}")
             yield event.plain_result("❌ 从白名单中移除失败，请查看控制台日志")
 
-    @filter.on_llm_response()
-    async def remove_null_message(self, event: AstrMessageEvent, resp: LLMResponse):
-        """
-        如果结果为 `NULL` 则删除消息
-        """
-        if resp.role == 'assistant':
-            # 检测是否为NULL
-            if resp.completion_text.strip().upper() == "NULL":
-                logger.debug(f"Found 'NULL' in LLM response: {resp.completion_text}")
-                resp.completion_text = ""
-                event.stop_event()
+
