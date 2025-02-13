@@ -9,7 +9,7 @@ from pathlib import Path
 from openai import OpenAI
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register
-
+import json
 logger = logging.getLogger("astrbot")
 
 
@@ -93,8 +93,10 @@ class QNA(Star):
         }
 
         response = requests.request("POST", url, json=payload, headers=headers)
+        data = json.loads(response.text)
+        content = data["choices"][0]["message"]["content"]
 
-        yield event.plain_result(response.text)
+        yield event.plain_result(content)
 
 
 
