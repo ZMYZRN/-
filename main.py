@@ -105,7 +105,7 @@ class QNA(Star):
             ]
         }
         headers = {
-            "Authorization": "Bearer <token>",
+            "Authorization": "Bearer sk-qeqttbvwvfbeqeyizkdlnwqxvhlnnmwnfehrcyxtwkjijkbk",
             "Content-Type": "application/json"
         }
 
