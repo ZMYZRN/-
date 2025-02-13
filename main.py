@@ -1,6 +1,7 @@
 import logging
 import random
 import re
+import requests
 from astrbot.api.all import *
 from astrbot.core import astrbot_config
 from astrbot.core.provider.entites import LLMResponse
@@ -72,18 +73,45 @@ class QNA(Star):
         conversation_id = await self.context.conversation_manager.get_curr_conversation_id(event.unified_msg_origin)
         conversation = await self.context.conversation_manager.get_conversation(event.unified_msg_origin, conversation_id)
 
-        client = OpenAI(
-            api_key="sk-qeqttbvwvfbeqeyizkdlnwqxvhlnnmwnfehrcyxtwkjijkbk",
-            base_url="https://api.siliconflow.cn/v1"
-        )
-        response = client.chat.completions.create(
-            model='deepseek-ai/DeepSeek-V2.5',
-            messages=[
-                {'role': 'user',
-                 'content': message}
+        url = "https://api.siliconflow.cn/v1/chat/completions"
+
+        payload = {
+            "model": "deepseek-ai/DeepSeek-V3",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": message
+                }
             ],
-            stream=True
-        )
+            "stream": False,
+            "max_tokens": 512,
+            "stop": ["null"],
+            "temperature": 0.7,
+            "top_p": 0.7,
+            "top_k": 50,
+            "frequency_penalty": 0.5,
+            "n": 1,
+            "response_format": {"type": "text"},
+            "tools": [
+                {
+                    "type": "function",
+                    "function": {
+                        "description": "<string>",
+                        "name": "<string>",
+                        "parameters": {},
+                        "strict": False
+                    }
+                }
+            ]
+        }
+        headers = {
+            "Authorization": "Bearer <token>",
+            "Content-Type": "application/json"
+        }
+
+        response = requests.request("POST", url, json=payload, headers=headers)
+
+
         yield event.plain_result(response.text)
 
 
