@@ -83,7 +83,7 @@ class QNA(Star):
                     "content": message
                 }
             ],
-            "max_tokens": 512,
+            "max_tokens": 2048,
             "frequency_penalty": 0.5,
             "n": 1,
         }
@@ -94,9 +94,9 @@ class QNA(Star):
 
         response = requests.request("POST", url, json=payload, headers=headers)
         data = json.loads(response.text)
-        # content = data['choices'][0]['message']['content']
+        content = data['choices'][0]['message']['content']
 
-        yield event.plain_result(response.text)
+        yield event.plain_result(content)
 
 
 
